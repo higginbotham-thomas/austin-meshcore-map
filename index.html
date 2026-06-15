@@ -387,6 +387,7 @@ function repTooltip(r) {
 
 // ── draw repeaters ─────────────────────────────────────────────────────────
 const repLayer = L.layerGroup().addTo(map);
+const markerByName = {};
 
 // Group by exact coordinate; skip nodes with no GPS fix (0,0)
 const coordGroups = {};
@@ -530,8 +531,6 @@ function filterNodes() {
 renderNodes();
 
 // ── node zoom ─────────────────────────────────────────────────────────────
-const markerByName = {};   // populated during marker creation
-
 function zoomNode(name) {
   const r = repByName[name];
   if (!r || !r.has_gps) return;
