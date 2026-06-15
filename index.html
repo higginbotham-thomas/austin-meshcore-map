@@ -153,6 +153,23 @@
 
     <!-- MAP CONTROLS -->
     <div id="pane-controls" class="sb-pane active">
+      <div class="section-label">Clutter</div>
+      <div class="ctrl-row">
+        <input type="checkbox" id="chk-nlcd" onchange="updateNLCD()">
+        <label for="chk-nlcd">NLCD land cover (2021)</label>
+      </div>
+      <div class="ctrl-row" style="gap:10px;padding-top:4px">
+        <label for="nlcd-opacity" style="color:var(--muted);font-size:11px;white-space:nowrap">Opacity</label>
+        <input type="range" id="nlcd-opacity" min="10" max="80" value="45" step="5"
+               style="flex:1;accent-color:var(--accent)" onchange="updateNLCD()" oninput="updateNLCD()">
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px 10px;margin:4px 0 8px;font-size:11px;color:var(--muted)">
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#68ab5f;margin-right:3px"></span>Forest</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#cc0000;margin-right:3px"></span>High-density dev</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#ffbb22;margin-right:3px"></span>Open/scrub</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#476ba0;margin-right:3px"></span>Water</span>
+      </div>
+
       <div class="section-label">Paths</div>
       <div class="ctrl-row">
         <input type="checkbox" id="chk-bidir" checked onchange="updatePaths()">
@@ -249,6 +266,34 @@ const map = L.map('map', {zoomControl:true}).setView([30.25, -97.75], 10);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution:'© OpenStreetMap © CARTO', maxZoom:19
 }).addTo(map);
+
+// ── NLCD WMS layer ────────────────────────────────────────────────────────
+let nlcdLayer = null;
+
+function updateNLCD() {
+  const on      = document.getElementById('chk-nlcd').checked;
+  const opacity = parseInt(document.getElementById('nlcd-opacity').value) / 100;
+  if (!on) {
+    if (nlcdLayer) { map.removeLayer(nlcdLayer); nlcdLayer = null; }
+    return;
+  }
+  if (!nlcdLayer) {
+    nlcdLayer = L.tileLayer.wms(
+      'https://www.mrlc.gov/geoserver/mrlc_display/NLCD_2021_Land_Cover_L48/wms', {
+        layers:      'NLCD_2021_Land_Cover_L48',
+        format:      'image/png',
+        transparent: true,
+        version:     '1.1.1',
+        opacity,
+        attribution: 'USGS MRLC · NLCD 2021',
+      }
+    );
+    nlcdLayer.addTo(map);
+    nlcdLayer.bringToBack();   // keep nodes and paths on top
+  } else {
+    nlcdLayer.setOpacity(opacity);
+  }
+}
 
 // ── helpers ───────────────────────────────────────────────────────────────
 function repDot(r) {
@@ -380,6 +425,7 @@ function updatePaths() {
       pathLine(e, dim).addTo(pathLayer);
     }
   });
+  repLayer.bringToFront();
 }
 updatePaths();
 
