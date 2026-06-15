@@ -431,13 +431,13 @@
 <table>
 <tr><th>Coverage Type</th><th>Squares</th><th>%</th><th>RF Meaning</th></tr>
 <!-- BEGIN:COVERAGE_ROWS -->
-<tr><td><span style="color:var(--accent2)">■</span> BIDIR</td><td>337</td><td>6.5%</td><td>Confirmed bidirectional contact; avg RSL SNR +5.2 dB above noise floor</td></tr>
-<tr><td><span style="color:#80cbc4">■</span> RX</td><td>338</td><td>6.5%</td><td>Received signal from grid; uplink TX not confirmed</td></tr>
-<tr><td><span style="color:var(--warn)">■</span> TX</td><td>86</td><td>1.7%</td><td>Downlink confirmed; uplink not heard (asymmetric path)</td></tr>
-<tr><td><span style="color:#90caf9">■</span> DISC</td><td>1,327</td><td>25.7%</td><td>Discovered passively; no confirmed two-way contact</td></tr>
-<tr><td><span style="color:var(--danger)">■</span> DROP</td><td>3,010</td><td>58.3%</td><td>Dropped — below RSL threshold; no copy</td></tr>
-<tr><td><span style="color:var(--muted)">■</span> DEAD</td><td>63</td><td>1.2%</td><td>Dead zone — repeater heard signal but did not route it further</td></tr>
-<tr><td colspan="4" style="color:var(--muted);font-size:12px">Confirmed coverage (BIDIR+RX+TX) = 761 squares (14.7%); total 5,161 squares; BIDIR SNR range: −6.3 dB to +12.5 dB</td></tr>
+<tr><td><span style="color:var(--accent2)">■</span> BIDIR</td><td>0</td><td>0%</td><td>Confirmed bidirectional contact; RSL above noise</td></tr>
+<tr><td><span style="color:#80cbc4">■</span> RX</td><td>0</td><td>0%</td><td>Received signal from grid; uplink TX not confirmed</td></tr>
+<tr><td><span style="color:var(--warn)">■</span> TX</td><td>0</td><td>0%</td><td>Downlink confirmed; uplink not heard (asymmetric)</td></tr>
+<tr><td><span style="color:#90caf9">■</span> DISC</td><td>0</td><td>0%</td><td>Discovered passively; no confirmed two-way contact</td></tr>
+<tr><td><span style="color:var(--danger)">■</span> DROP</td><td>0</td><td>0%</td><td>Dropped — below RSL threshold; no copy</td></tr>
+<tr><td><span style="color:var(--muted)">■</span> DEAD</td><td>0</td><td>0%</td><td>Dead zone — repeater heard signal but did not route it further</td></tr>
+<tr><td colspan="4" style="color:var(--muted);font-size:12px">Confirmed coverage (BIDIR+RX+TX) = 0 squares (0%); total 0 squares</td></tr>
 <!-- END:COVERAGE_ROWS -->
 </table>
 </div>
@@ -914,7 +914,7 @@ Regional Code:   AUS</code></pre>
 <tr><th>Status</th><th>Count</th><th>Notes</th></tr>
 <!-- BEGIN:FRESNEL_ROWS -->
 <tr><td>CLEAR</td><td>26</td><td>Full 60% F1 clearance; genuine LOS or near-LOS</td></tr>
-<tr><td>MARGINAL</td><td>31</td><td>LOS but &lt;5 m margin; low sensitivity to conditions</td></tr>
+<tr><td>MARGINAL</td><td>31</td><td>LOS but <5 m margin; low sensitivity to conditions</td></tr>
 <tr><td>OBSTRUCTED</td><td>381</td><td>Sub-F1 NLOS; diffraction path; expected to work with LoRa SF12</td></tr>
 <tr><td>BLOCKED</td><td>169</td><td>Geometrically impossible direct link; routing table propagation</td></tr>
 <tr><td><strong>Total</strong></td><td><strong>607</strong></td><td>211 repeaters with valid location; 16 excluded (MQTT-bridged or no position)</td></tr>
