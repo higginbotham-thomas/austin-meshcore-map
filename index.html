@@ -322,7 +322,7 @@ function updateNLCD() {
       }
     );
     nlcdLayer.addTo(map);
-    nlcdLayer.bringToBack();   // keep nodes and paths on top
+    // vector panes (paths, markers) are z-index 400/600 vs tile pane 200 — naturally on top
   } else {
     nlcdLayer.setOpacity(opacity);
   }
