@@ -118,15 +118,48 @@
   .b3 { background:#3a2e10; color:var(--warn); }
   .bq { background:var(--surface2); color:var(--muted); }
 
-  /* ── tooltip ── */
+  /* ── tooltip content (inner div) ── */
   .tt {
-    background:var(--surface); border:1px solid var(--border);
-    border-radius:6px; padding:10px 13px; min-width:220px;
-    font-size:12.5px; line-height:1.6;
+    padding: 10px 13px; min-width: 220px;
+    font-size: 12.5px; line-height: 1.6; color: var(--text);
   }
-  .tt b { color:var(--accent); }
-  .tt .tt-row { display:flex; justify-content:space-between; gap:12px; }
-  .tt .tt-label { color:var(--muted); }
+  .tt b { color: var(--accent); }
+  .tt .tt-row { display: flex; justify-content: space-between; gap: 12px; }
+  .tt .tt-label { color: var(--muted); }
+
+  /* ── Leaflet tooltip: dark outer container, strip default padding ── */
+  .leaflet-tooltip {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+    color: var(--text) !important;
+    padding: 0 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.55) !important;
+    font-size: inherit !important;
+  }
+  /* Arrow tip colors for each direction */
+  .leaflet-tooltip-right::before  { border-right-color:  var(--border) !important; }
+  .leaflet-tooltip-left::before   { border-left-color:   var(--border) !important; }
+  .leaflet-tooltip-top::before    { border-top-color:    var(--border) !important; }
+  .leaflet-tooltip-bottom::before { border-bottom-color: var(--border) !important; }
+
+  /* ── Leaflet popup: dark chrome ── */
+  .leaflet-popup-content-wrapper {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 6px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
+    color: var(--text) !important;
+    padding: 0 !important;
+  }
+  .leaflet-popup-content { margin: 0 !important; }
+  .leaflet-popup-tip     { background: var(--surface) !important; box-shadow: none !important; }
+  .leaflet-popup-tip-container { filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5)); }
+  .leaflet-popup-close-button {
+    color: var(--muted) !important; font-size: 20px !important;
+    top: 4px !important; right: 8px !important;
+  }
+  .leaflet-popup-close-button:hover { color: var(--text) !important; }
 
   @media(max-width:700px) {
     #sidebar { display:none; }
@@ -377,7 +410,7 @@ function stackedPopup(group) {
       <div class="tt-row"><span class="tt-label">Last heard</span><span>${r.last_heard||'—'}</span></div>
       <div class="tt-row"><span class="tt-label">Hop bytes</span><span>${r.bytes}</span></div>
     </div>`).join('');
-  return `<div class="tt" style="min-width:240px">${items}</div>`;
+  return `<div style="padding:12px 14px;min-width:220px;font-size:12.5px;line-height:1.6">${items}</div>`;
 }
 
 Object.values(coordGroups).forEach(group => {
