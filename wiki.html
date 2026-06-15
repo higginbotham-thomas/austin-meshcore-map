@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Austin Mesh Community Wiki</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232636;
+    --border: #2e3245;
+    --accent: #4fc3f7;
+    --accent2: #81c784;
+    --warn: #ffb74d;
+    --danger: #e57373;
+    --purple: #ce93d8;
+    --text: #e0e4f0;
+    --muted: #8b91a8;
+    --code-bg: #141720;
+    --tag-bg: #1e2a3a;
+    --tag-text: #4fc3f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  #layout { display: flex; min-height: 100vh; }
+  #sidebar {
+    width: 265px;
+    min-width: 265px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  #main {
+    flex: 1;
+    padding: 40px 48px;
+    max-width: 980px;
+  }
+  @media (max-width: 800px) {
+    #sidebar { display: none; }
+    #main { padding: 24px 20px; }
+  }
+
+  .sidebar-brand {
+    padding: 0 20px 16px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .sidebar-brand h2 { font-size: 16px; color: var(--accent); font-weight: 700; }
+  .sidebar-brand p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .sidebar-section {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    padding: 14px 20px 4px;
+  }
+  nav a {
+    display: block;
+    padding: 5px 20px 5px 28px;
+    font-size: 13px;
+    color: var(--text);
+    opacity: 0.8;
+    border-left: 2px solid transparent;
+    transition: all 0.1s;
+  }
+  nav a:hover { opacity: 1; background: var(--surface2); border-left-color: var(--accent); text-decoration: none; }
+  nav a.active { opacity: 1; color: var(--accent); border-left-color: var(--accent); background: var(--surface2); }
+
+  section { margin-bottom: 64px; scroll-margin-top: 24px; }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+  h2 { font-size: 21px; font-weight: 700; margin: 36px 0 14px; color: var(--text); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  h3 { font-size: 17px; font-weight: 600; margin: 24px 0 10px; color: var(--accent); }
+  h4 { font-size: 14px; font-weight: 700; margin: 16px 0 8px; color: var(--text); text-transform: uppercase; letter-spacing: 0.05em; }
+  p { margin-bottom: 12px; }
+  p:last-child { margin-bottom: 0; }
+
+  .page-meta { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+
+  .table-wrap { overflow-x: auto; margin: 12px 0 20px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th {
+    background: var(--surface2);
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12.5px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    color: var(--accent2);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+  pre code { background: none; border: none; padding: 0; color: var(--accent2); }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 99px;
+    vertical-align: middle;
+  }
+  .badge-green { background: #1a3a1f; color: var(--accent2); }
+  .badge-yellow { background: #3a2e10; color: var(--warn); }
+  .badge-red { background: #3a1515; color: var(--danger); }
+  .badge-blue { background: #1a2c3a; color: var(--accent); }
+  .badge-purple { background: #2a1a3a; color: var(--purple); }
+
+  .callout {
+    border-left: 3px solid var(--border);
+    background: var(--surface);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout-warn { border-left-color: var(--warn); background: #1e1a0e; }
+  .callout-info { border-left-color: var(--accent); background: #0e1e2a; }
+  .callout-success { border-left-color: var(--accent2); background: #0e1e0e; }
+  .callout-danger { border-left-color: var(--danger); background: #2a0e0e; }
+  .callout strong { display: block; margin-bottom: 4px; }
+
+  .status-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0 24px;
+    font-size: 13px;
+  }
+  .status-item label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 2px; }
+  .status-item span { font-weight: 600; }
+
+  .map-banner {
+    background: linear-gradient(135deg, #0e1e2a 0%, #1a1d27 100%);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 0 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .map-banner .icon { font-size: 32px; flex-shrink: 0; }
+  .map-banner h3 { margin: 0 0 4px; color: var(--accent); font-size: 16px; }
+  .map-banner p { margin: 0; font-size: 13px; color: var(--muted); }
+  .map-banner a.btn {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: inline-block;
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 6px;
+  }
+  .map-banner a.btn:hover { background: #80d8f7; text-decoration: none; }
+
+  hr.section-rule { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  ul, ol { padding-left: 22px; margin: 8px 0 12px; }
+  li { margin-bottom: 4px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .card h4 { margin-top: 0; margin-bottom: 8px; color: var(--accent); font-size: 13px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .card p { font-size: 13px; color: var(--muted); margin: 0; }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 24px 0;
+  }
+  .intro-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    transition: border-color 0.15s;
+    text-decoration: none;
+    display: block;
+    color: var(--text);
+  }
+  .intro-card:hover { border-color: var(--accent); text-decoration: none; }
+  .intro-card .ic-icon { font-size: 20px; margin-bottom: 6px; }
+  .intro-card .ic-title { font-size: 14px; font-weight: 700; }
+  .intro-card .ic-desc { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .timeline li { margin-bottom: 8px; }
+  .timeline .date { font-size: 12px; color: var(--muted); font-weight: 600; margin-right: 6px; }
+
+  .lbbox {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 12px 0 20px;
+  }
+  .lbbox .label { color: var(--muted); display: inline-block; width: 220px; }
+  .lbbox .val { color: var(--accent2); font-weight: 700; }
+  .lbbox .sep { color: var(--border); }
+  .lbbox .total { color: var(--accent); font-weight: 700; border-top: 1px solid var(--border); margin-top: 6px; padding-top: 6px; display: block; }
+</style>
+</head>
+<body>
+
+<div id="layout">
+<div id="sidebar">
+  <div class="sidebar-brand">
+    <h2>Austin Mesh Wiki</h2>
+    <p>MeshCore LoRa community — Austin, TX</p>
+  </div>
+  <div class="sidebar-section">Community</div>
+  <nav>
+    <a href="#overview">Overview &amp; Band Plan</a>
+    <a href="#infrastructure">Infrastructure Sites</a>
+    <a href="#coverage">Coverage by Area</a>
+    <a href="#community-members">Community Members</a>
+    <a href="#meshcore-vs-meshtastic">MeshCore vs. Meshtastic</a>
+  </nav>
+  <div class="sidebar-section">Getting Started</div>
+  <nav>
+    <a href="#hardware">Hardware Guide</a>
+    <a href="#solar-diy">DIY Solar Repeater</a>
+    <a href="#antennas">Antennas</a>
+    <a href="#firmware-config">Firmware &amp; Config</a>
+    <a href="#cli">CLI Reference</a>
+  </nav>
+  <div class="sidebar-section">Platforms</div>
+  <nav>
+    <a href="#meshmapper">MeshMapper</a>
+    <a href="#wardriving">Mobile RF Survey</a>
+    <a href="#observer-setup">Observer / MQTT Gateway</a>
+    <a href="#letsmesh">LetsMesh (inactive)</a>
+  </nav>
+  <div class="sidebar-section">RF Analysis</div>
+  <nav>
+    <a href="#link-budget">Link Budget</a>
+    <a href="#fresnel">Fresnel Zone Analysis</a>
+    <a href="#propagation">Propagation Modes</a>
+    <a href="#network-nodes">Known Nodes</a>
+  </nav>
+  <div class="sidebar-section">Context</div>
+  <nav>
+    <a href="#platforms-summary">Platforms Summary</a>
+    <a href="#governance">Governance &amp; Drama</a>
+    <a href="#resources">Resources</a>
+  </nav>
+</div>
+
+<div id="main">
+
+<div class="map-banner">
+  <div class="icon">🗺</div>
+  <div>
+    <h3>Interactive RF Network Map</h3>
+    <p>Fresnel clearance, routing table entries, terrain obstacles, FSPL, link budget margin, and antenna height sensitivity for every node in the Austin region.</p>
+  </div>
+  <a class="btn" href="index.html">Open Map →</a>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+<h1>Austin Mesh Community Wiki</h1>
+<div class="page-meta">Last updated: 2026-06-15 · Sources: AustinMesh Discord (18,251 msgs Sep 2025–Jun 2026), austinmesh.org, wiki.meshmapper.net, letsmesh.net, MeshCore GitHub</div>
+
+<p>Austin Mesh is a community organization building a LoRa mesh radio network across the Austin metro area. It is technology-agnostic — covering both <strong>MeshCore</strong> (primary) and <strong>Meshtastic</strong>, coordinated by Tommy Ekstrand (Discord: <code>thomas.ekstrand</code>). Licensed CC-BY-SA-4.0.</p>
+
+<div class="status-row">
+  <div class="status-item"><label>Website</label><span><a href="https://austinmesh.org">austinmesh.org</a></span></div>
+  <div class="status-item"><label>Discord</label><span><a href="https://discord.gg/6a5Sv2s9bG">Join</a></span></div>
+  <div class="status-item"><label>Coverage Map (AUS)</label><span><a href="https://aus.meshmapper.net">aus.meshmapper.net</a></span></div>
+  <div class="status-item"><label>Coverage Map (CT)</label><span><a href="https://ct.meshmapper.net">ct.meshmapper.net</a></span></div>
+</div>
+
+<h3>Frequency &amp; Regulatory</h3>
+<div class="callout callout-info">
+<strong>Part 15 ISM — not Part 97 Amateur Radio.</strong> MeshCore nodes in this network operate under FCC Part 15 (unlicensed) in the 902–928 MHz ISM band, centered at 915 MHz. The Part 15 power ceiling for spread-spectrum devices in this band is <strong>30 dBm (1 W) conducted power with 6 dBi antenna</strong>, or equivalently 36 dBm EIRP. Licensed amateur operators may operate under Part 97 on nearby frequencies with higher power, but all Austin Mesh MeshCore nodes documented here are Part 15.
+</div>
+
+<div class="table-wrap">
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Band</td><td>902–928 MHz ISM (center: 915 MHz)</td></tr>
+<tr><td>Regulatory framework</td><td>FCC Part 15, Subpart C (spread-spectrum)</td></tr>
+<tr><td>Max conducted TX power</td><td>30 dBm (1 W)</td></tr>
+<tr><td>Modulation</td><td>LoRa — spread-spectrum chirp modulation (Semtech SX1262 / SX1276)</td></tr>
+<tr><td>Spreading factor</td><td>SF7–SF12; Austin Mesh typically SF12 for maximum range</td></tr>
+<tr><td>Bandwidth</td><td>125 kHz (SF12 at 125 kHz = ~300 bps throughput)</td></tr>
+<tr><td>Network type</td><td>Mesh relay; MeshCore protocol layer over LoRa PHY</td></tr>
+</table>
+</div>
+
+<div class="intro-grid">
+  <a class="intro-card" href="#infrastructure">
+    <div class="ic-icon">📡</div>
+    <div class="ic-title">Managed Infrastructure</div>
+    <div class="ic-desc">6 sites from 30 ft to 640 ft AGL; all solar</div>
+  </a>
+  <a class="intro-card" href="#link-budget">
+    <div class="ic-icon">📊</div>
+    <div class="ic-title">Link Budget</div>
+    <div class="ic-desc">EIRP, FSPL, RSL, fade margin for 915 MHz LoRa</div>
+  </a>
+  <a class="intro-card" href="#fresnel">
+    <div class="ic-icon">📐</div>
+    <div class="ic-title">Fresnel Analysis</div>
+    <div class="ic-desc">607 paths; 26 LOS-clear, 169 terrain-NLOS</div>
+  </a>
+  <a class="intro-card" href="#hardware">
+    <div class="ic-icon">🔧</div>
+    <div class="ic-title">Hardware Guide</div>
+    <div class="ic-desc">Repeaters, companions, solar builds, antennas</div>
+  </a>
+  <a class="intro-card" href="#meshmapper">
+    <div class="ic-icon">🗺</div>
+    <div class="ic-title">MeshMapper</div>
+    <div class="ic-desc">Coverage mapping, mobile RF survey, observer setup</div>
+  </a>
+  <a class="intro-card" href="#governance">
+    <div class="ic-icon">⚖️</div>
+    <div class="ic-title">Governance Context</div>
+    <div class="ic-desc">AndyK trademark drama; open-source fork activity</div>
+  </a>
+</div>
+</section>
+
+<!-- INFRASTRUCTURE -->
+<section id="infrastructure">
+<h2>Austin Mesh Managed Infrastructure Sites</h2>
+<p>Official infrastructure nodes operated as part of the community build-out. All solar-powered. Source: <a href="https://austinmesh.org/about/infrastructure/">austinmesh.org/about/infrastructure/</a> (Jun 2026). Heights are AGL (above ground level) at the antenna mounting point.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Site</th><th>Area</th><th>Height AGL</th><th>Hardware</th><th>Notes</th></tr>
+<tr><td><strong>Independent Condos</strong></td><td>Downtown Austin</td><td>640 ft / 195m</td><td>RAK4631 × 3 + j-pole / 5 dBi omni</td><td>Three nodes: NE corner, SW corner, bridge. Highest managed site in network; dominant relay for most of central Austin.</td></tr>
+<tr><td><strong>Google</strong> <span class="badge badge-yellow">Planned</span></td><td>Downtown Austin</td><td>510 ft / 155m</td><td>TBD</td><td>Planned addition</td></tr>
+<tr><td><strong>Spring Condos</strong></td><td>Downtown Austin</td><td>430 ft / 131m</td><td>RAK4631 + 6 dBi fiberglass omni</td><td>Single node; covers South Lamar, Town Lake, Zilker Park</td></tr>
+<tr><td><strong>111 Congress</strong></td><td>Downtown Austin</td><td>240 ft / 73m</td><td>SenseCAP Solar P1 Pro × 2</td><td>SE + NW corners</td></tr>
+<tr><td><strong>UT PMA</strong></td><td>UT Austin Campus</td><td>220 ft / 67m</td><td>Ikoka Nano + cavity filter</td><td>Physics/Math/Astronomy building. RF-noisy environment (campus electronics); cavity filter required to reduce receiver desensitization.</td></tr>
+<tr><td><strong>WVARC</strong></td><td>Wimberley</td><td>60 ft / 18m</td><td>SenseCAP Solar P1 Pro</td><td>Wimberley Valley Amateur Radio Club hilltop tower. Provides LOS path into SW Austin and connection toward San Marcos.</td></tr>
+<tr><td><strong>AISD Hart / Garcia / LBJ / LASA</strong></td><td>NE &amp; East Austin</td><td>30 ft / 9m</td><td>Solar (Meshtastic)</td><td>AISD community partner school nodes. Meshtastic protocol — MeshCore and Meshtastic are not inter-operable at the protocol level.</td></tr>
+</table>
+</div>
+
+<h3>Antenna Notes (Managed Sites)</h3>
+<p>All managed-site antennas are <strong>omnidirectional verticals</strong> optimized for 902–928 MHz. The j-pole at Independent Condos provides a radiation pattern with minimal high-angle radiation (low takeoff angle) — appropriate for long-distance ground-level paths from that elevation. The 6 dBi fiberglass at Spring Condos provides ~6 dBi gain over an isotropic radiator (approximately 3.85 dBd over a half-wave dipole). At these heights, antenna gain selection matters less than site elevation and LOS to the surrounding terrain.</p>
+
+<h3>Expansion Priorities</h3>
+<p>Community-identified high-value sites: water/antenna towers connecting Bastrop, Georgetown, Burnet, Temple, Kyle/Buda, San Marcos, San Antonio; ACC Pinnacle Campus (7748 Hwy 290 W); Tower of the Hills/Chase Bank (13809 Research Blvd); The Domain towers; Bee Cave/Lakeway; Pflugerville/Round Rock; I-35 corridor.</p>
+</section>
+
+<!-- COVERAGE -->
+<section id="coverage">
+<h2>Coverage by Area</h2>
+
+<div class="table-wrap">
+<table>
+<tr><th>Area</th><th>RF Status</th><th>Notes</th></tr>
+<tr><td>Central Austin / Mueller</td><td><span class="badge badge-green">Good</span></td><td>Dense node coverage; Independent Condos provides dominant downlink at 640 ft AGL. Digitaino is a key relay node.</td></tr>
+<tr><td>Leander</td><td><span class="badge badge-green">Good</span></td><td>Silent Running (bplein) is a strong anchor — consistently relays across the region</td></tr>
+<tr><td>Oak Hill</td><td><span class="badge badge-green">Active</span></td><td>tgh0831-repeater (SenseCap Solar Node, 1.5m AGL); obstructed paths to downtown due to Barton Creek Escarpment</td></tr>
+<tr><td>South Austin / Buda</td><td><span class="badge badge-yellow">Developing</span></td><td>WVARC working toward San Marcos</td></tr>
+<tr><td>San Marcos</td><td><span class="badge badge-blue">Connected</span></td><td>Reaching Austin via Wimberley path (verified May 2026)</td></tr>
+<tr><td>East Austin</td><td><span class="badge badge-green">Active</span></td><td>.metanerd operating nodes with RF/antenna focus</td></tr>
+<tr><td>Cedar Park</td><td><span class="badge badge-yellow">Sparse</span></td><td>Flat terrain limits propagation from Leander cluster; near-LOS paths limited</td></tr>
+<tr><td>Pflugerville / Round Rock</td><td><span class="badge badge-yellow">Sparse</span></td><td>No self-sustaining cluster yet; propagation from downtown impeded by range</td></tr>
+<tr><td>Georgetown</td><td><span class="badge badge-red">Very Sparse</span></td><td>dvourthis new node Jun 2026 (~25 ft AGL in tree near Frost Elementary); needs elevation for acceptable RSL</td></tr>
+<tr><td>Dripping Springs</td><td><span class="badge badge-yellow">Developing</span></td><td>Henly Hilltop 1W (paulb1369) + DS1 pairing</td></tr>
+<tr><td>Liberty Hill</td><td><span class="badge badge-yellow">Planned</span></td><td>_zanchez_ scouting high-ground sites</td></tr>
+<tr><td>Bastrop / Manor</td><td><span class="badge badge-red">Sparse</span></td><td>Occasional contacts only; no confirmed local cluster</td></tr>
+<tr><td>San Antonio</td><td><span class="badge badge-yellow">Partial</span></td><td>CT region (MeshMapper combined view) covers AUS + SATX</td></tr>
+</table>
+</div>
+
+<h3>CT Region RF Survey Snapshot (2026-06-13)</h3>
+<p>Retrieved via MeshMapper Coverage API. CT region = Austin + San Antonio combined. Grid squares are ~300m × ~340m cells.</p>
+<div class="table-wrap">
+<table>
+<tr><th>Coverage Type</th><th>Squares</th><th>%</th><th>RF Meaning</th></tr>
+<tr><td><span style="color:var(--accent2)">■</span> BIDIR</td><td>337</td><td>6.5%</td><td>Confirmed bidirectional contact; avg RSL SNR +5.2 dB above noise floor</td></tr>
+<tr><td><span style="color:#80cbc4">■</span> RX</td><td>338</td><td>6.5%</td><td>Received signal from grid; uplink TX not confirmed</td></tr>
+<tr><td><span style="color:var(--warn)">■</span> TX</td><td>86</td><td>1.7%</td><td>Downlink confirmed; uplink not heard (asymmetric path)</td></tr>
+<tr><td><span style="color:#90caf9">■</span> DISC</td><td>1,327</td><td>25.7%</td><td>Discovered passively; no confirmed two-way contact</td></tr>
+<tr><td><span style="color:var(--danger)">■</span> DROP</td><td>3,010</td><td>58.3%</td><td>Dropped — below RSL threshold; no copy</td></tr>
+<tr><td><span style="color:var(--muted)">■</span> DEAD</td><td>63</td><td>1.2%</td><td>Dead zone — repeater heard signal but did not route it further</td></tr>
+<tr><td colspan="4" style="color:var(--muted);font-size:12px">Confirmed coverage (BIDIR+RX+TX) = 761 squares (14.7%); total 5,161 squares; BIDIR SNR range: −6.3 dB to +12.5 dB</td></tr>
+</table>
+</div>
+</section>
+
+<!-- COMMUNITY MEMBERS -->
+<section id="community-members">
+<h2>Key Community Members</h2>
+<p>Based on Austin Mesh #meshcore Discord activity analysis (18,251 messages, Sep 2025–Jun 2026).</p>
+<div class="table-wrap">
+<table>
+<tr><th>Discord Handle</th><th>Activity</th><th>Role / Notes</th></tr>
+<tr><td><code>sketchyetch</code></td><td>3,196 msgs</td><td>Most active contributor; network routing expertise; mesh protocol focus</td></tr>
+<tr><td><code>bplein</code></td><td>2,727 msgs</td><td>Leander area; <strong>Silent Running</strong> repeater; hardware experimenter; ikoka advocate; power system testing</td></tr>
+<tr><td><code>m4j1c_12</code></td><td>2,048 msgs</td><td>Third most active</td></tr>
+<tr><td><code>brad_98184</code></td><td>1,653 msgs</td><td>RF / antenna expertise; E22 module and power amplifier specialist</td></tr>
+<tr><td><code>edsai</code></td><td>1,078 msgs</td><td>Active community member</td></tr>
+<tr><td><code>andyshinn</code></td><td>1,053 msgs</td><td><strong>Case de Shinn</strong> repeater; hardware procurement lead; re-flashing and build specialist</td></tr>
+<tr><td><code>thomas.ekstrand</code></td><td>682 msgs</td><td><strong>AustinMesh admin</strong>; coordinates both MeshCore and Meshtastic for the Austin region; A300 nodes + UT-1; website copyright © Tommy Ekstrand</td></tr>
+<tr><td><code>_zanchez_</code></td><td>487 msgs</td><td>Liberty Hill / Leander area; scouting high-ground node sites</td></tr>
+<tr><td><code>.metanerd</code></td><td>386 msgs</td><td>East Austin; RF/antenna focus; MuninnMesh firmware fork</td></tr>
+<tr><td><code>tgh0831</code></td><td>—</td><td>Oak Hill repeater operator; MeshMapper admin AUS + CT regions</td></tr>
+<tr><td><code>mralders0n</code></td><td>—</td><td>MeshMapper creator / maintainer; Ottawa Mesh; developing Beacon (LetsMesh replacement)</td></tr>
+<tr><td><code>Tree</code> (Michael Hart)</td><td>—</td><td>LetsMesh creator; stepped away Jun 2026</td></tr>
+</table>
+</div>
+</section>
+
+<!-- MESHCORE VS MESHTASTIC -->
+<section id="meshcore-vs-meshtastic">
+<h2>MeshCore vs. Meshtastic</h2>
+<p>Austin Mesh supports both. MeshCore is the primary focus for permanent metro infrastructure because repeater-centric routing suits hill-country terrain — the Barton Creek Escarpment and other features create RF shadows that reward high-elevation dedicated relay points over general-purpose flooding. Source: <a href="https://austinmesh.org/about/meshcore-vs-meshtastic/">austinmesh.org</a>.</p>
+
+<div class="callout callout-warn">
+<strong>MeshCore and Meshtastic are not inter-operable.</strong> They use different over-the-air protocols on the same 915 MHz band. A MeshCore repeater will not relay Meshtastic packets and vice versa. AISD school nodes (Meshtastic) are community partners but operate as a separate logical network.
+</div>
+
+<div class="table-wrap">
+<table>
+<tr><th>Feature</th><th>MeshCore</th><th>Meshtastic</th></tr>
+<tr><td>Relay architecture</td><td>Dedicated repeater nodes only — companions do <em>not</em> relay</td><td>Most nodes relay by default (configurable)</td></tr>
+<tr><td>Hop limit</td><td>Up to 64 hops (32 with 2-byte routing paths)</td><td>Default 3, maximum 7</td></tr>
+<tr><td>Channel overhead</td><td>Minimal; repeaters push adverts rarely; pull-based telemetry</td><td>More frequent background broadcasts (position, telemetry)</td></tr>
+<tr><td>Best use case</td><td>Fixed infrastructure; urban/suburban terrain with obstructions</td><td>Ad-hoc portable groups (field operations, hikes, events)</td></tr>
+<tr><td>Routing strategy</td><td>Flood-then-direct: initial flood establishes path, then direct routing</td><td>Managed flood; DMs use direct next-hop since firmware v2.6</td></tr>
+<tr><td>Protocol</td><td>Proprietary MeshCore over LoRa PHY</td><td>Open Meshtastic protocol over LoRa PHY</td></tr>
+</table>
+</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- HARDWARE -->
+<section id="hardware">
+<h2>Hardware Guide</h2>
+<p>Community consensus from Austin Mesh #meshcore Discord (Sep 2025–Jun 2026) and <a href="https://austinmesh.org/devices/">austinmesh.org/devices/</a>. All repeater hardware operates at 915 MHz / 902–928 MHz under Part 15.</p>
+
+<h3>Official Austin Mesh Recommendations (Jun 2026)</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Category</th><th>Pick</th><th>Price</th><th>Notes</th></tr>
+<tr><td>Repeater (best)</td><td><strong>Atlavox Beacon</strong></td><td>~$250</td><td>Top pick per austinmesh.org; solar-ready; weatherproof outdoor enclosure</td></tr>
+<tr><td>Repeater (good)</td><td><strong>SenseCAP Solar Node P1 Pro</strong></td><td>$75–140</td><td>All-in-one weatherproof; designed for Meshtastic but runs MeshCore firmware</td></tr>
+<tr><td>Repeater (DIY)</td><td>RAK + Voltaic solar build</td><td>$75–200</td><td>Full control over power system; see DIY lessons below</td></tr>
+<tr><td>Companion (smallest)</td><td><strong>SenseCAP T1000-E</strong></td><td>—</td><td>Card-sized; good for getting started</td></tr>
+<tr><td>Companion (best antenna)</td><td><strong>Atlavox M1</strong></td><td>—</td><td>Better antenna gain than T1000-E; field portable</td></tr>
+<tr><td>Companion (DIY / meetup)</td><td><strong>Heltec T114</strong></td><td>—</td><td>Official Austin Mesh meetup giveaway build (Andy Shinn)</td></tr>
+</table>
+</div>
+
+<h3>Repeater Boards — Ranked by Community Preference</h3>
+
+<h4>1. Ikoka (strongly preferred)</h4>
+<p>Most-recommended repeater board in the Austin community (269 Discord mentions). Peak TX current draw ~900 mA — lower than RAK 1W, which matters for solar and battery-backed systems. Output power ~30 dBm (1 W). Used at UT PMA (with cavity filter) and Auto Specialists repeater. <em>"For a repeater build I'd take an Ikoka over these 9 times out of 10"</em> — bplein.<br><strong>Buy:</strong> <a href="https://ikoka.com">ikoka.com</a></p>
+
+<h4>2. RAK 1W (RAK19007 base board + RAK4631 LoRa module)</h4>
+<p>Second-most discussed (85 mentions); ~30 dBm TX. Supports Serial interface for remote CLI access — useful for headless repeater management without physical access. Compatible with Waveshare Solar Power Manager D for solar builds.</p>
+<div class="callout callout-warn">
+<strong>Cost:</strong> ~$39 list, but ~$91/board after international shipping + import duties from RAK direct. Rokland (US distributor) is moderately cheaper.<br>
+<strong>FCC note (Mar 2026):</strong> Rokland received notice that RAK shipped boards without FCC approval; Rokland paused sales. Verify current compliance status before ordering — operating a non-FCC-authorized transmitter under Part 15 creates regulatory risk even for unlicensed operation.
+</div>
+<p><strong>Buy:</strong> Rokland (preferred US), RAK Wireless (international)</p>
+
+<h4>3. Heltec (older generation; usable with caveats)</h4>
+<p>136 Discord mentions; widely deployed but now considered older generation. Heltec T096 outputs ~700 mW (~28.5 dBm) — approximately 1.5 dB below the RAK/ikoka 1 W class. <strong>Requires a cavity filter</strong> (bandpass filter) to suppress out-of-band TX emissions and reduce receiver front-end desensitization from co-site or nearby interference sources. Tommy distributed cavity filters at an Austin Mesh meetup. Heltec V3 consistently noted for shorter range than RAK/ikoka class. Suitable for learning/testing; not recommended for new permanent infrastructure.</p>
+
+<h4>4. E22 Modules (EBYTE E22-900M30S / 900M33S)</h4>
+<p>45 Discord mentions; 30 dBm output. Used in Zebra Duo Pro and Station G2 hardware. <strong>Critical power note:</strong> The E22 module contains a fixed-gain power amplifier stage after the SX1262. MeshCore controls only the SX1262 drive level — setting it too high over-drives the PA and can permanently damage the E22. Community enforces an 8 dB drive limit. brad_98184: <em>"MeshCore can only change the power level of the SX1262; the E22 module includes a power amp with a fixed amount of gain."</em></p>
+
+<h3>All-in-One Solar Repeaters</h3>
+<div class="two-col">
+  <div class="card">
+    <h4>SenseCAP Solar Node P1</h4>
+    <p>Self-contained weatherproof enclosure with integrated solar panel. Designed for Meshtastic but runs MeshCore firmware. Good for permanent outdoor installs at sites without AC power. <a href="https://www.seeedstudio.com">seeedstudio.com</a></p>
+  </div>
+  <div class="card">
+    <h4>GAT562 (30S Mesh Solar Repeater)</h4>
+    <p>1 W TX version available. Popular on towers in East Austin. <strong>Important:</strong> USB bus power is insufficient for 30 dBm TX — battery must be connected to the battery port. New version includes a bandpass filter. No public schematic or charging documentation. <a href="https://shop.mtoolstec.com">mtoolstec.com</a></p>
+  </div>
+</div>
+
+<h3>Companion / Portable Nodes</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Device</th><th>Notes</th></tr>
+<tr><td>SenseCAP T1000-E</td><td>Popular portable tracker/companion (23 mentions). Good receive sensitivity. Common issue: channel mismatch — confirm the companion is on the same channel (14, 15, or 16) as the local repeater before troubleshooting anything else.</td></tr>
+<tr><td>L1 Pro</td><td>Bare board with OLED display. bender6502 held stock.</td></tr>
+<tr><td>LilyGo T-LoRa</td><td>7 mentions; re-flashing from Meshtastic to MeshCore is straightforward using the web flasher.</td></tr>
+<tr><td>T-Deck Plus</td><td>Keyboard-equipped device; used in Bee Cave / Dripping Springs area.</td></tr>
+</table>
+</div>
+</section>
+
+<!-- SOLAR DIY -->
+<section id="solar-diy">
+<h2>DIY Solar Repeater — Austin Mesh Lessons Learned</h2>
+<p>From <a href="https://austinmesh.org/devices/">austinmesh.org/devices/</a> — 5 hardware iterations over multiple Austin seasons (100°F+ summers, humid storms, hail). Current working version (v5): <code>12W solar panel → Voltaic Systems battery (USB output) → RAK board (USB input)</code>. Voltaic handles charge regulation and over-discharge protection with auto-reboot after recharge.</p>
+
+<ol>
+  <li><strong>Decouple the LoRa board from the solar/battery voltage.</strong> Feeding variable solar voltage directly into the RAK board causes it to enter "Super Deep Sleep" fault on low voltage — a state requiring physical reset. Use a Voltaic Systems battery as charge controller and buffered 5 V output.</li>
+  <li><strong>Solar panel: 10 W minimum.</strong> 0.4 W and 5 W panels both failed within one month under Austin summer insolation — insufficient to maintain battery state of charge through cloudy days.</li>
+  <li><strong>Battery: 5,000 mAh minimum.</strong> Voltaic Systems units include integrated solar charge controller and over-discharge cutoff — they auto-reboot after recharging, eliminating the need for a watchdog circuit.</li>
+  <li><strong>Antenna: fiberglass over rubber duck.</strong> Fiberglass handles UV degradation, wind, and rain over months/years. Rubber duck antennas degrade quickly outdoors; performance and pattern can shift as the dielectric ages.</li>
+  <li><strong>Shade the battery enclosure.</strong> Direct sunlight on the battery box causes thermal stress that accelerates capacity loss and shortens service life. Even a small solar shade over the battery section helps significantly.</li>
+  <li><strong>Omit GPS.</strong> A GPS module adds continuous RX current draw — significant over a season. Fixed repeaters don't need GPS; coordinates are set once in firmware.</li>
+  <li><strong>Weatherproofing is critical.</strong> Use O-rings on the antenna feedthrough, Proxicast tape on coax connectors, and a drain plug in the enclosure bottom. Apply conformal coating to the PCB in humid environments.</li>
+</ol>
+
+<div class="callout callout-info">
+<strong>Power connection note:</strong> The JST connector on the solar board is the correct battery input — not USB. USB power is limited to ~1 A at 5 V (5 W), which is marginal for 30 dBm TX burst current. Always connect a battery to the JST port for full-power repeater operation. bplein bench test: RAK 1W ran 1+ hour on a 15 F supercapacitor alone with <em>repeat</em> disabled — illustrates how intermittent the TX duty cycle is at MeshCore advert intervals.
+</div>
+</section>
+
+<!-- ANTENNAS -->
+<section id="antennas">
+<h2>Antennas</h2>
+<p>All gain figures below are <strong>dBi</strong> (gain relative to a theoretical isotropic radiator). To convert to dBd (gain relative to a half-wave dipole), subtract 2.15 dB. The managed infrastructure uses omnidirectional verticals; no directional (Yagi, sector) antennas are currently deployed in the Austin Mesh network.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Antenna</th><th>Gain</th><th>Notes</th></tr>
+<tr><td>RAK 5.8 dBi fiberglass</td><td>5.8 dBi (3.65 dBd)</td><td>Community recommendation for permanent outdoor installs; considered for tgh0831-repeater upgrade</td></tr>
+<tr><td>6 dBi fiberglass (Rokland)</td><td>6 dBi (3.85 dBd)</td><td>Used at Spring Condos (managed infrastructure). bplein: noticeably better coverage vs. stock when well-placed.</td></tr>
+<tr><td>j-pole / 5 dBi</td><td>~5 dBi</td><td>Used at Independent Condos; j-pole is a variant of the collinear omni — low radiation angle, useful at high AGL</td></tr>
+<tr><td>Stock SenseCAP antenna</td><td>~2 dBi</td><td>tgh0831-repeater current antenna. Suitable for learning; fiberglass preferred for permanent outdoor use.</td></tr>
+<tr><td>Taoglas TI-09-A</td><td>~2 dBi</td><td>Community-linked precision antenna: <a href="https://www.digikey.com/en/products/detail/taoglas-limited/TI-09-A-0111/2332695">DigiKey</a></td></tr>
+<tr><td>Cavity filter (bandpass)</td><td>N/A (passive)</td><td>Required for Heltec and E22 builds. Suppresses out-of-band emissions; reduces front-end desensitization. Lothar (prior community supplier) exited Apr 2026 — community currently sourcing alternatives.</td></tr>
+</table>
+</div>
+
+<div class="callout callout-success">
+<strong>Key RF insight:</strong> Antenna height (AGL) has more impact on received signal level than antenna gain in terrain-shadowed environments. Raising a ground-level repeater 4 m (from 1.5 m to 5.5 m AGL) at tgh0831-repeater would clear the Fresnel zone on both Independent Condos paths — equivalent to adding ~6 dB of effective gain for those specific paths. No antenna upgrade achieves this if the terrain blockage persists.
+</div>
+</section>
+
+<!-- FIRMWARE & CONFIG -->
+<section id="firmware-config">
+<h2>Firmware &amp; Configuration</h2>
+
+<div class="two-col">
+  <div class="card">
+    <h4>Web Flasher</h4>
+    <p>In-browser firmware flash. Select role at flash time (repeater, companion, room server).<br><a href="https://flasher.meshcore.io/">flasher.meshcore.io</a></p>
+  </div>
+  <div class="card">
+    <h4>Web Configurator</h4>
+    <p>Browser-based repeater and room server configuration. No CLI required for basic setup.<br><a href="https://config.meshcore.dev/">config.meshcore.dev</a></p>
+  </div>
+  <div class="card">
+    <h4>Companion Web App</h4>
+    <p>Free PWA companion. Connect via BLE, USB, or TCP.<br><a href="https://app.meshcore.nz/">app.meshcore.nz</a></p>
+  </div>
+  <div class="card">
+    <h4>Global MeshCore Map</h4>
+    <p>Worldwide node map, separate from MeshMapper.<br><a href="https://map.meshcore.io/">map.meshcore.io</a></p>
+  </div>
+</div>
+
+<h3>Multi-Byte Routing Path Hash (Recommended: 2-byte)</h3>
+<p>MeshCore identifies repeaters in routing tables using a hash of the device's public key. The default 1-byte hash yields only 254 unique IDs — collisions become frequent as the Austin network grows. Upgrading to 2-byte hashes gives 65,534 unique slots. Requires firmware ≥1.14.1.</p>
+
+<pre><code>set path.hash.mode 1   # 2-byte hash (recommended)
+set path.hash.mode 2   # 3-byte hash (very large networks)
+get path.hash.mode     # query current setting</code></pre>
+
+<p>After changing: reboot and issue a flood advertisement. MeshMapper auto-detects the byte mode from advert packets and updates the routing map automatically — no manual portal update required.</p>
+
+<p><strong>AUS region status (Jun 2026):</strong> 150 nodes total — 50 on 1-byte (33%), 92 on 2-byte (61%), 8 on 3-byte (5%). The 8 three-byte nodes need migration to 2-byte: BCW RAK 1W, EA 1W Solar, BCW RAK 4631, Solder Blob Repeater, CapRock RAK 1W, Buda Observer, CapRock SolarXiao, CapRock Solar Ikoka.</p>
+
+<h3>Nash Mesh Tuning</h3>
+<p>Community-vetted config guide for MeshCore, adjusted based on how many neighboring repeaters a node can hear. thomas.ekstrand trialed on A300 + UT-1 nodes in Jun 2026 with good results. Appropriate tuning reduces unnecessary flooding while maintaining path discovery.<br><a href="https://nashme.sh/getting-started/mesh">nashme.sh/getting-started/mesh</a></p>
+
+<h3>Channel Alignment</h3>
+<p>Austin Mesh nodes typically operate on channel 14, 15, or 16 (firmware channel numbers map to specific frequency offsets within the 902–928 MHz band). A companion that cannot hear its repeater is almost always a channel mismatch, not an RF path issue. Verify matching channels on the companion/repeater pair before troubleshooting any perceived coverage problem.</p>
+
+<h3>Flood Advertisement Interval</h3>
+<p>New repeaters should set a short flood advert interval (~1–2 hours) during initial deployment to establish routing table entries at neighboring nodes and appear in MeshMapper. After the node is well-established, lengthen the interval to reduce unnecessary channel occupancy.</p>
+</section>
+
+<!-- CLI -->
+<section id="cli">
+<h2>CLI Quick Reference</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Task</th><th>Command</th><th>Notes</th></tr>
+<tr><td>Set 2-byte path hash</td><td><code>set path.hash.mode 1</code></td><td>Requires firmware ≥1.14.1; reboot + flood advert after</td></tr>
+<tr><td>Set 3-byte path hash</td><td><code>set path.hash.mode 2</code></td><td>For very large dense networks only</td></tr>
+<tr><td>Query current hash mode</td><td><code>get path.hash.mode</code></td><td></td></tr>
+<tr><td>Block wardriving channel</td><td><code>denyf *</code></td><td>Firmware ≥recent; bans all flood channels; use deliberately — affects MeshMapper coverage contribution</td></tr>
+</table>
+</div>
+
+<h3>MeshMapper Discord Bot</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Command</th><th>Example</th><th>Function</th></tr>
+<tr><td><code>!status</code></td><td><code>!status AUS</code></td><td>Region data, observer online/offline, ping counts</td></tr>
+<tr><td><code>!settings</code></td><td><code>!settings AUS</code></td><td>Region config (hop bytes, channels, stale-age threshold)</td></tr>
+<tr><td><code>!admins</code></td><td><code>!admins AUS</code></td><td>Region admins with contact info</td></tr>
+<tr><td><code>!bug</code></td><td><code>!bug description</code></td><td>Submit bug report to GitHub (5/user/hr)</td></tr>
+<tr><td><code>!feature</code></td><td><code>!feature description</code></td><td>Submit feature request to GitHub</td></tr>
+<tr><td><code>!help</code></td><td><code>!help</code></td><td>Command list</td></tr>
+</table>
+</div>
+<p>Tag @MeshMapper in public channels; DMs work without tagging. Full MeshCore firmware CLI reference: <a href="https://github.com/meshcore-dev/MeshCore/wiki/Repeater-&-Room-Server-CLI-Reference">GitHub — Repeater &amp; Room Server CLI Reference</a></p>
+</section>
+
+<hr class="section-rule">
+
+<!-- MESHMAPPER -->
+<section id="meshmapper">
+<h2>MeshMapper</h2>
+<p>Community-driven RF coverage mapping platform for MeshCore. Users conduct mobile RF surveys with the mobile app, collect GPS-tagged signal data, and contribute it to a regional coverage map. Free, volunteer-maintained; mobile app is <a href="https://github.com/MeshMapper/MeshMapper_Flutter_App">open-source (Flutter)</a>; web backend is closed-source.</p>
+
+<div class="status-row">
+  <div class="status-item"><label>AUS Region</label><span><a href="https://aus.meshmapper.net">aus.meshmapper.net</a></span></div>
+  <div class="status-item"><label>CT Region</label><span><a href="https://ct.meshmapper.net">ct.meshmapper.net</a></span></div>
+  <div class="status-item"><label>Wiki</label><span><a href="https://wiki.meshmapper.net">wiki.meshmapper.net</a></span></div>
+  <div class="status-item"><label>Creator</label><span>mralders0n (Ottawa Mesh)</span></div>
+</div>
+
+<h3>Regions</h3>
+<p>A region is a geographic area with its own map, administrators, and settings — named by IATA airport code. The CT region is a multiregion group combining Austin (AUS) and San Antonio (SATX) under a unified map and admin panel. To onboard a new region: active local user group, at least 1 MQTT observer node, Discord account for admin contact. MQTT verification ~5–6 min; admin review typically within 24 hrs.</p>
+
+<h3>Coverage Map Color Key</h3>
+<div class="two-col">
+  <div>
+    <h4>Grid Square Colors (Signal Status)</h4>
+    <div class="table-wrap">
+    <table>
+    <tr><td><span style="color:var(--accent2)">■</span> Green</td><td>BIDIR — confirmed bidirectional contact; RSL above noise</td></tr>
+    <tr><td><span style="color:#80cbc4">■</span> Cyan</td><td>DISC — discovery packet sent + reply received</td></tr>
+    <tr><td><span style="color:var(--warn)">■</span> Orange</td><td>TX — downlink confirmed; uplink not received (asymmetric)</td></tr>
+    <tr><td><span style="color:#b39ddb">■</span> Purple</td><td>RX — uplink received; didn't transmit from that square</td></tr>
+    <tr><td><span style="color:var(--muted)">■</span> Grey</td><td>DEAD — repeater heard ping but did not route it onward</td></tr>
+    <tr><td><span style="color:var(--danger)">■</span> Red</td><td>DROP — no copy; RSL below receiver threshold</td></tr>
+    </table>
+    </div>
+  </div>
+  <div>
+    <h4>Repeater Icon Colors</h4>
+    <div class="table-wrap">
+    <table>
+    <tr><td><span style="color:#f48fb1">■</span> Pink</td><td>Active and on-air</td></tr>
+    <tr><td><span style="color:var(--warn)">■</span> Orange</td><td>Newly discovered (within 14 days)</td></tr>
+    <tr><td><span style="color:var(--muted)">■</span> Grey</td><td>Stale — no advert within stale-age threshold</td></tr>
+    <tr><td><span style="color:var(--danger)">■</span> Red</td><td>Excluded — duplicate ID or flagged collision</td></tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<h3>Advanced Visualization Modes</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Mode</th><th>Description</th></tr>
+<tr><td>Effective Coverage</td><td>Averages pings per grid square — most statistically reliable view</td></tr>
+<tr><td>Signal Strength</td><td>RSL (relative) color: ≤−1 dB SNR = red → ≥+5 dB SNR = green</td></tr>
+<tr><td>Ping Age</td><td>Data recency color-coded; thresholds adjustable</td></tr>
+<tr><td>Noise Floor</td><td>RF environment: green (low noise) → red (high interference / desense)</td></tr>
+</table>
+</div>
+
+<h3>Routing Table Entries vs. Direct Radio Contact</h3>
+<div class="callout callout-warn">
+<strong>Routing table entries are not confirmed radio contacts.</strong> MeshMapper renders paths from node routing tables — which propagate through the mesh via flooding. A path entry "A → B" means A's firmware has heard that B exists at some point via some sequence of hops; it does not necessarily mean A and B have direct radio contact.
+
+<br><br>MeshMapper has no way to distinguish a routing entry established by direct LoRa reception from one that arrived as a routing advertisement relayed through 10 intermediate nodes — or one that arrived via an MQTT-bridged path from across the state.
+
+<br><br><strong>Practical consequence:</strong> Many "paths" shown on the map for distant or terrain-obstructed pairs are propagated routing table entries, not direct RF links. The <a href="index.html">interactive RF map</a> marks likely MQTT-bridged paths (distance &gt;100 km) as dashed lines with a ⚠ indicator, and flags high Fresnel deficit paths (&gt;50m deficit) as BLOCKED — geometrically incompatible with direct LoRa contact at this terrain and distance.
+</div>
+
+<h3>Duplicate Routing IDs</h3>
+<p>1-byte IDs = 254 possible combinations → collisions occur when two devices share a routing ID. MeshMapper flags colliders with red icons and excludes them from leaderboards. Resolution: affected operators upgrade to 2-byte hash mode (firmware ≥1.14.1). MeshMapper Hybrid wardriving mode auto-detects collisions using Discovery packets.</p>
+</section>
+
+<!-- WARDRIVING -->
+<section id="wardriving">
+<h2>Mobile RF Survey (Wardriving)</h2>
+<p>A mobile RF survey with the MeshMapper app generates coverage data by transmitting and receiving MeshCore packets at GPS-tagged locations. Each confirmed reception populates a ~300m grid square.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Mode</th><th>Method</th><th>Best For</th></tr>
+<tr><td><strong>Hybrid</strong> <span class="badge badge-green">Recommended</span></td><td>Alternates channel TX and zero-hop discovery requests at configured interval; firmware ≥1.10</td><td>General survey; richest bidirectional dataset</td></tr>
+<tr><td>Passive</td><td>Zero-hop discovery every 30 s; no TX flooding; firmware ≥1.10</td><td>Minimal channel loading; listen-only survey</td></tr>
+<tr><td>Active (legacy)</td><td>Channel TX only at 15/30/60 s intervals</td><td>Backward compatibility</td></tr>
+<tr><td>Trace</td><td>Zero-hop trace path to a specific target repeater</td><td>Antenna alignment; path diagnostics to a single repeater</td></tr>
+<tr><td>Manual Ping</td><td>Single "Send Ping" button; 15 s cooldown</td><td>Spot checks</td></tr>
+</table>
+</div>
+</section>
+
+<!-- OBSERVER SETUP -->
+<section id="observer-setup">
+<h2>Observer / MQTT Gateway Setup</h2>
+<p>An <strong>MQTT observer</strong> (or MQTT gateway) is a MeshCore node configured to forward received RF packets to the MeshMapper broker over the internet. This is what populates the coverage map and routing path database. A region requires at least 1 observer; 2–3 preferred for redundancy and spatial diversity.</p>
+
+<h3>MQTT Broker</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Broker</th><th>Host</th><th>Port</th><th>Transport</th><th>Status</th></tr>
+<tr><td>MeshMapper</td><td>mqtt.meshmapper.net</td><td>443</td><td>WebSocket + TLS</td><td><span class="badge badge-green">Active — use this</span></td></tr>
+<tr><td>LetsMesh</td><td>mqtt-us-v1.letsmesh.net</td><td>443</td><td>WebSocket + TLS</td><td><span class="badge badge-red">Unmaintained — migrate away</span></td></tr>
+</table>
+</div>
+
+<h3>Setup Methods</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Method</th><th>Hardware</th><th>Notes</th></tr>
+<tr><td>Python Packet Capture</td><td>Raspberry Pi + any companion node (USB / BLE / TCP)</td><td>Maximum control; runs as a systemd service. <a href="https://github.com/agessaman/meshcore-packet-capture">agessaman/meshcore-packet-capture</a></td></tr>
+<tr><td>MeshCore-HA</td><td>Home Assistant + MeshCore radio</td><td>Configure MQTT broker under Settings → Devices &amp; Services → MeshCore integration</td></tr>
+<tr><td>Native MQTT Firmware</td><td>Heltec V3 / V4</td><td>Direct firmware-level MQTT support; documentation in progress</td></tr>
+</table>
+</div>
+
+<h3>Home Assistant MQTT Config Reference</h3>
+<pre><code>Server:          mqtt.meshmapper.net
+Port:            443
+Transport:       WebSocket
+TLS:             Enabled
+Keep Alive:      60 s
+Auth:            MeshCore Auth Token
+Token Audience:  mqtt.meshmapper.net
+Payload Mode:    LetsMesh-Compatible
+Token Duration:  3600 s
+Regional Code:   AUS</code></pre>
+</section>
+
+<!-- LETSMESH -->
+<section id="letsmesh">
+<h2>LetsMesh <span class="badge badge-red">Inactive Jun 2026</span></h2>
+<div class="callout callout-danger">
+<strong>LetsMesh is effectively inactive as of Jun 2026.</strong> Michael Hart (Discord: Tree) stepped away months ago after starting a new job. Site and MQTT servers are on life support with no active maintenance. Community recommendation (mralders0n, MeshMapper maintainer): migrate all MQTT observer nodes to MeshMapper only. Do not configure new LetsMesh observers. The LetsMesh forum is Cloudflare-blocked for many users.
+</div>
+
+<p>LetsMesh (<a href="https://analyzer.letsmesh.net">analyzer.letsmesh.net</a>) was a real-time packet and RF reliability analysis tool. It ingested radio packets from MQTT-connected observer nodes and provided: packet feed, path trace visualization, node index, uptime tracking, and reliability comparisons between observers.</p>
+
+<h3>Alternatives</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Platform</th><th>URL</th><th>Status</th><th>Notes</th></tr>
+<tr><td><strong>MeshMapper</strong></td><td><a href="https://meshmapper.net">meshmapper.net</a></td><td><span class="badge badge-green">Active</span></td><td>Coverage mapping; own MQTT infrastructure; tgh0831 is AUS+CT admin</td></tr>
+<tr><td><strong>Beacon</strong></td><td>(beta)</td><td><span class="badge badge-yellow">Beta</span></td><td>Open-source self-hostable replacement by mralders0n + @ded; v1.0.0 Jun 2026</td></tr>
+<tr><td><strong>waev</strong></td><td><a href="https://waev.app/#/connect">waev.app</a></td><td><span class="badge badge-yellow">Dev</span></td><td>Real-time telemetry and analytics for MeshCore</td></tr>
+<tr><td><strong>CoreScope</strong></td><td><a href="https://github.com/Kpa-clawbot/CoreScope">GitHub</a></td><td><span class="badge badge-yellow">Dev</span></td><td>GPL-3.0 Docker-based packet analyzer; viable self-hosted option now</td></tr>
+</table>
+</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- LINK BUDGET -->
+<section id="link-budget">
+<h2>Link Budget — 915 MHz LoRa SF12</h2>
+<p>The link budget determines the maximum allowable path loss between TX and RX for a usable signal. All values below are for typical Austin Mesh nodes running MeshCore at SF12 (maximum spread, maximum sensitivity, minimum data rate).</p>
+
+<div class="lbbox">
+  <span><span class="label">TX power (conducted)</span><span class="val">+20 dBm</span> &nbsp;<span style="color:var(--muted);font-size:11px">(typical; Part 15 allows up to +30 dBm)</span></span><br>
+  <span><span class="label">TX antenna gain</span><span class="val">+2 dBi</span></span><br>
+  <span><span class="label">EIRP</span><span class="val">+22 dBm</span> &nbsp;<span style="color:var(--muted);font-size:11px">(TX power + antenna gain; effective isotropic radiated power)</span></span><br>
+  <span><span class="label">RX antenna gain</span><span class="val">+2 dBi</span></span><br>
+  <span><span class="label">Receiver sensitivity (SF12)</span><span class="val">−130 dBm</span> &nbsp;<span style="color:var(--muted);font-size:11px">(SX1262 datasheet typical; LoRa SF12/125 kHz)</span></span><br>
+  <span class="total"><span class="label">Total link budget</span><span class="val">154 dB</span> &nbsp;<span style="color:var(--muted);font-size:11px">(EIRP − sensitivity + RX antenna gain)</span></span>
+</div>
+
+<h3>Free-Space Path Loss (FSPL)</h3>
+<p>FSPL represents the ideal signal attenuation between isotropic antennas in free space — no terrain, no atmosphere, no obstructions. It is the theoretical minimum path loss at a given frequency and distance:</p>
+
+<pre><code>FSPL (dB) = 32.44 + 20·log₁₀(f_MHz) + 20·log₁₀(d_km)
+           = 32.44 + 20·log₁₀(915) + 20·log₁₀(d_km)
+           = 91.67 + 20·log₁₀(d_km)</code></pre>
+
+<div class="table-wrap">
+<table>
+<tr><th>Distance</th><th>FSPL @ 915 MHz</th><th>Budget margin (above FSPL)</th><th>Notes</th></tr>
+<tr><td>1 km</td><td>91.7 dB</td><td><span style="color:var(--accent2)">+62.3 dB</span></td><td>Easily closed; local coverage</td></tr>
+<tr><td>5 km</td><td>105.7 dB</td><td><span style="color:var(--accent2)">+48.3 dB</span></td><td>Typical intra-city hop</td></tr>
+<tr><td>13 km</td><td>113.9 dB</td><td><span style="color:var(--accent2)">+40.1 dB</span></td><td>Oak Hill → Independent Condos; budget covers typical diffraction losses</td></tr>
+<tr><td>25 km</td><td>119.6 dB</td><td><span style="color:var(--accent2)">+34.4 dB</span></td><td>Regional relay (e.g., Wimberley → downtown)</td></tr>
+<tr><td>60 km</td><td>126.2 dB</td><td><span style="color:var(--warn)">+27.8 dB</span></td><td>Near edge of practical range with terrain</td></tr>
+<tr><td>84 km</td><td>128.5 dB</td><td><span style="color:var(--warn)">+25.5 dB</span></td><td>Longest confirmed LoRa hop in Austin dataset (South Blanco Hilltop, rural hilltop)</td></tr>
+</table>
+</div>
+
+<p><strong>Received signal level (RSL)</strong> = EIRP − FSPL + RX antenna gain − other losses (coax, connectors, polarization mismatch, multipath). For an RSL above the receiver sensitivity threshold, the link closes. The margin above the noise floor determines robustness to fading and interference.</p>
+
+<div class="callout callout-info">
+<strong>Why LoRa closes links that traditional narrowband systems cannot:</strong> SF12 LoRa has a noise floor approximately 125 dB below a 1 mW reference (+22 dBm EIRP - 125 dB noise floor ≈ −103 dBm noise floor relative, before spreading gain). The 40 dB margin above FSPL at 13 km means a link can tolerate 40 dB of additional attenuation from diffraction, knife-edge obstacles, foliage, or multipath before falling below the receiver sensitivity floor — far more than the few dB of margin typical in conventional narrowband land-mobile links.
+</div>
+</section>
+
+<!-- FRESNEL -->
+<section id="fresnel">
+<h2>Fresnel Zone Analysis</h2>
+<p>RF path clearance analysis for the Austin MeshCore network using USGS 3DEP terrain data. Quantifies clearance of the first Fresnel zone for every routing table entry with confirmed endpoints. See the <a href="index.html">interactive map</a> for full per-path data with hover tooltips and antenna height sensitivity tables.</p>
+
+<h3>What Is the First Fresnel Zone?</h3>
+<p>The first Fresnel zone (F1) is an ellipsoid around the direct path between two antennas. Energy traveling through the zone arrives at the receiver in phase — obstruction of this zone causes destructive interference that attenuates the received signal even when a geometric LOS exists. The industry rule for point-to-point links is to maintain 60% of the F1 radius as clearance above terrain. The F1 radius at the midpoint of a path is:</p>
+
+<pre><code>r₁ (m) = 17.3 · √(d_km / (4 · f_GHz))    (midpoint, approximate)
+        = 17.3 · √(d_km / (4 · 0.915))
+        ≈ 9.04 · √d_km   (at 915 MHz)</code></pre>
+
+<p>At 13 km (Oak Hill → Independent Condos): F1 midpoint radius ≈ <strong>32.6 m</strong>. 60% clearance requires ≥ 19.5 m above terrain at the midpoint.</p>
+
+<h3>Methodology</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Frequency</td><td>915 MHz (902–928 MHz ISM band)</td></tr>
+<tr><td>Clearance rule</td><td>60% first Fresnel zone radius</td></tr>
+<tr><td>Earth curvature model</td><td>4/3 effective Earth radius (k=4/3); standard tropospheric refractivity model for normal propagation conditions</td></tr>
+<tr><td>Terrain sample interval</td><td>100 m along each path</td></tr>
+<tr><td>MQTT exclusion</td><td>Paths &gt;100 km excluded as internet-bridged (not RF contacts)</td></tr>
+<tr><td>AGL baseline</td><td>Known infrastructure heights used (see table below); all other nodes set to 0 m AGL — pessimistic baseline</td></tr>
+<tr><td>Terrain data</td><td>USGS 3DEP 1/3 arc-second (~10 m resolution); 6-tile merge, 29–32°N / 96–100°W</td></tr>
+</table>
+</div>
+
+<h3>Known AGL Values Used in Analysis</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Node</th><th>AGL</th><th>Source</th></tr>
+<tr><td>Independent NE / SW / Bridge</td><td>195 m (640 ft)</td><td>AustinMesh infrastructure page</td></tr>
+<tr><td>Spring Condos</td><td>131 m (430 ft)</td><td>AustinMesh infrastructure page</td></tr>
+<tr><td>111 Congress (Mueller Repeater)</td><td>73 m (240 ft)</td><td>Building height</td></tr>
+<tr><td>UT PMA (UT-1/UT-2)</td><td>67 m (220 ft)</td><td>AustinMesh infrastructure page</td></tr>
+<tr><td>WVARC Repeater</td><td>18 m (60 ft)</td><td>Tower height, AustinMesh page</td></tr>
+<tr><td>tgh0831-repeater (Oak Hill)</td><td>1.5 m (5 ft)</td><td>Operator-confirmed 2026-06-14</td></tr>
+<tr><td>All other nodes</td><td>0 m</td><td>Ground level per DEM — pessimistic; actual rooftop nodes will have better clearance</td></tr>
+</table>
+</div>
+
+<h3>Path Status Definitions</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Status</th><th>Map Color</th><th>RF Meaning</th><th>LoRa Practical Impact</th></tr>
+<tr><td><strong>CLEAR</strong></td><td><span style="color:#3fb950">■</span> Green</td><td>≥60% F1 Fresnel clearance; full LOS</td><td>Full link quality; no diffraction penalty</td></tr>
+<tr><td><strong>MARGINAL</strong></td><td><span style="color:#f0c040">■</span> Yellow</td><td>Clearance just above 60% F1; &lt;5 m margin</td><td>Minor sensitivity to vegetation growth, multipath, or wet-foliage conditions</td></tr>
+<tr><td><strong>OBSTRUCTED</strong></td><td><span style="color:#e05252">■</span> Red</td><td>Sub-F1 clearance; NLOS via terrain diffraction</td><td>Signal propagates via knife-edge or rounded-hill diffraction. With ~40 dB budget margin above FSPL, most OBSTRUCTED paths are functional. Typical for urban/suburban LoRa.</td></tr>
+<tr><td><strong>BLOCKED</strong></td><td><span style="color:#8b3a8b">■</span> Purple</td><td>Fresnel deficit &gt;50 m; geometrically incompatible with direct LoRa contact at this frequency, distance, and terrain</td><td>Almost certainly a routing table entry propagated via intermediate hops — not a direct radio contact between these two nodes. Treat as routing topology data, not RF link data.</td></tr>
+</table>
+</div>
+
+<div class="callout callout-info">
+<strong>OBSTRUCTED ≠ non-functional.</strong> The 60% Fresnel rule was developed for traditional microwave point-to-point links where a few dB of margin is all that separates usable from unusable. LoRa SF12 has roughly 40 dB of budget margin above FSPL — enough to absorb substantial knife-edge diffraction losses while remaining above the −130 dBm receiver sensitivity floor. Expect most OBSTRUCTED paths to work in practice. BLOCKED paths with &gt;50 m Fresnel deficit are geometrically incompatible with direct LoRa regardless of budget margin.
+</div>
+
+<h3>Results — 2026-06-15 Analysis Run</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Status</th><th>Count</th><th>Notes</th></tr>
+<tr><td>CLEAR</td><td>26</td><td>Full 60% F1 clearance; genuine LOS or near-LOS</td></tr>
+<tr><td>MARGINAL</td><td>31</td><td>LOS but &lt;5 m margin; low sensitivity to conditions</td></tr>
+<tr><td>OBSTRUCTED</td><td>381</td><td>Sub-F1 NLOS; diffraction path; expected to work with LoRa SF12</td></tr>
+<tr><td>BLOCKED</td><td>169</td><td>Geometrically impossible direct link; routing table propagation</td></tr>
+<tr><td><strong>Total</strong></td><td><strong>607</strong></td><td>211 repeaters with valid location; 16 excluded (MQTT-bridged or no position)</td></tr>
+</table>
+</div>
+
+<h3>Terrain Obstacle Clusters</h3>
+<p>99 terrain obstacle clusters identified (clustered within 1 km radius). Worst obstructions are the Hill Country escarpments southwest of Austin (375–428 m MSL), including the Barton Creek Escarpment which blocks direct paths between Oak Hill nodes and downtown Austin. Displayed as <strong>▲</strong> on the map with ground elevation MSL and affected paths — click any ▲ for details.</p>
+</section>
+
+<!-- PROPAGATION MODES -->
+<section id="propagation">
+<h2>Propagation Modes</h2>
+<p>Understanding how 915 MHz signals propagate over Austin's terrain is essential for interpreting coverage maps and planning node placement.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Mode</th><th>When It Occurs</th><th>LoRa Performance</th></tr>
+<tr><td><strong>LOS (Line of Sight)</strong></td><td>Unobstructed path; ≥60% F1 Fresnel clearance</td><td>Full budget margin; best reliability</td></tr>
+<tr><td><strong>Near-LOS (sub-Fresnel)</strong></td><td>Geometric LOS but F1 zone partially obstructed; OBSTRUCTED status</td><td>Some diffraction loss; LoRa SF12 budget typically absorbs 5–15 dB penalty</td></tr>
+<tr><td><strong>Knife-edge diffraction</strong></td><td>Signal bends over a sharp terrain crest or ridgeline; OBSTRUCTED status</td><td>Moderate loss (10–25 dB typical); LoRa SF12 often survives; highly dependent on geometry</td></tr>
+<tr><td><strong>Rounded-hill diffraction</strong></td><td>Signal curves over a broad, rounded terrain feature (e.g., Cedar Park flat upland)</td><td>More loss than knife-edge; LoRa SF12 marginal at longer distances</td></tr>
+<tr><td><strong>Local clutter (NLOS)</strong></td><td>Trees, structures, or buildings within ~1–3 km of antenna; very little improvement from increasing antenna height at the <em>other</em> end</td><td>Highly variable; dominated by near-field obstructions that don't respond to remote antenna height changes</td></tr>
+<tr><td><strong>Routing propagation</strong></td><td>Path entry in MeshMapper arrived via multi-hop relays or MQTT bridge; no direct radio contact</td><td>Not an RF path — map artifact; BLOCKED classification on this map</td></tr>
+</table>
+</div>
+
+<h3>Barton Creek Escarpment</h3>
+<p>The dominant RF barrier in the Austin metro. The escarpment rises from ~240 m MSL in Oak Hill to &gt;370 m MSL at the limestone rim — an obstacle wall that blocks direct paths from southwest Austin (Oak Hill, Dripping Springs) to downtown. The tgh0831-repeater at 1.5 m AGL shows Fresnel deficits of 32–50 m to Digitaino (downtown) and UT1 — not correctable by any practical antenna height. Paths to downtown from Oak Hill route through the WVARC (Wimberley) → downtown chain, or via elevated relay nodes that clear the escarpment horizon.</p>
+
+<h3>Local Clutter vs. Terrain</h3>
+<p>The sensitivity sweep in each repeater popup (<a href="index.html">map</a>) distinguishes local clutter from terrain obstruction. If adding 10 m of antenna height improves Fresnel margin by less than ~3 m (a gain slope &lt;0.3 m per meter of height added), the obstruction is near-field clutter (trees, structures within 1–3 km) — not solvable by raising the antenna at the far end. If the gain slope is ≥1 m per meter, the obstruction is a terrain feature on the path that can be cleared with antenna height.</p>
+</section>
+
+<!-- NETWORK NODES -->
+<section id="network-nodes">
+<h2>Known Network Nodes (Austin Metro)</h2>
+<p>Compiled from #meshcore Discord and MeshMapper AUS export (Jun 2026). Not exhaustive — nodes are added and removed regularly.</p>
+
+<div class="table-wrap">
+<table>
+<tr><th>Name</th><th>Area</th><th>Operator</th><th>Hardware</th><th>Notes</th></tr>
+<tr><td>Silent Running</td><td>Leander</td><td>bplein</td><td>—</td><td>One of the best-connected nodes in the network; consistently high-SNR relay</td></tr>
+<tr><td>Case de Shinn</td><td>—</td><td>andyshinn</td><td>RAK 1W + RAK19007/4631</td><td>Home node; hardware build documentation often shared in Discord</td></tr>
+<tr><td>Auto Specialists</td><td>Near 290 &amp; Circle Dr</td><td>—</td><td>Ikoka</td><td>New ~Jun 2026; spotted via MeshMapper</td></tr>
+<tr><td>UT-1</td><td>UT Austin</td><td>thomas.ekstrand</td><td>—</td><td>Part of managed infrastructure "Independent nodes" group</td></tr>
+<tr><td>A300 (multiple)</td><td>Metro-wide</td><td>thomas.ekstrand</td><td>A300</td><td>thomas.ekstrand operates multiple A300 nodes at various Austin locations</td></tr>
+<tr><td>Digitaino</td><td>Mueller area</td><td>—</td><td>—</td><td>Key relay node in central Austin; also developing a separate signal/mapping application</td></tr>
+<tr><td>Mueller Repeater</td><td>Mueller</td><td>triskadecaepyon</td><td>—</td><td>Distinct from Branch Park; downtown relay</td></tr>
+<tr><td>WOPR</td><td>—</td><td>—</td><td>—</td><td>Frequently in paths to Liberty Tower</td></tr>
+<tr><td>Liberty</td><td>—</td><td>—</td><td>—</td><td>New ~Jun 2026; lower elevation node</td></tr>
+<tr><td>Copper Creek (292E)</td><td>—</td><td>jose_pointero</td><td>RAK 4631</td><td>Updated to firmware 1.15</td></tr>
+<tr><td>YETT</td><td>Far North Austin</td><td>—</td><td>—</td><td>Unusual long-range relays to San Marcos reported</td></tr>
+<tr><td>Valhalla</td><td>—</td><td>—</td><td>—</td><td>Referenced in routing path discussions</td></tr>
+<tr><td>Tommy Roof G2</td><td>—</td><td>—</td><td>Heltec G2</td><td>Roof-mounted; Heltec G2 class hardware</td></tr>
+<tr><td>Henly Hilltop 1W</td><td>Henly (Dripping Springs area)</td><td>paulb1369</td><td>RAK 1W</td><td>Hilltop site; key SW corridor relay</td></tr>
+<tr><td>Dripping Springs 1</td><td>Dripping Springs</td><td>paulb1369</td><td>—</td><td>Companion node to Henly Hilltop</td></tr>
+<tr><td>MC Colossus</td><td>Wells Branch / I-35</td><td>zardoz66</td><td>Heltec V3</td><td>Short range noted — consistent with Heltec V3 limitations vs. RAK/ikoka class</td></tr>
+<tr><td>CBR1</td><td>—</td><td>ccampanale</td><td>LilyGo</td><td>Re-flashed from Meshtastic to MeshCore</td></tr>
+<tr><td>Georgetown (bcc38f60)</td><td>Georgetown (~Frost Elementary, ~25 ft AGL in tree)</td><td>dvourthis</td><td>—</td><td>New Jun 2026; seeking neighboring nodes in Georgetown/Leander area; needs higher AGL for usable RSL</td></tr>
+</table>
+</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- PLATFORMS SUMMARY -->
+<section id="platforms-summary">
+<h2>Platforms at a Glance</h2>
+<div class="table-wrap">
+<table>
+<tr><th>Platform</th><th>URL</th><th>Status</th><th>Notes</th></tr>
+<tr><td>MeshMapper AUS</td><td><a href="https://aus.meshmapper.net">aus.meshmapper.net</a></td><td><span class="badge badge-green">Active</span></td><td>tgh0831 admin; RF coverage map + repeater management</td></tr>
+<tr><td>MeshMapper CT</td><td><a href="https://ct.meshmapper.net">ct.meshmapper.net</a></td><td><span class="badge badge-green">Active</span></td><td>Austin + San Antonio combined region</td></tr>
+<tr><td>Austin Mesh</td><td><a href="https://austinmesh.org">austinmesh.org</a></td><td><span class="badge badge-green">Active</span></td><td>Community hub; hardware guides, infrastructure list</td></tr>
+<tr><td>LetsMesh</td><td><a href="https://analyzer.letsmesh.net">analyzer.letsmesh.net</a></td><td><span class="badge badge-red">Inactive</span></td><td>Tree stepped away; migrate MQTT observers to MeshMapper</td></tr>
+<tr><td>Beacon</td><td>(no public URL yet)</td><td><span class="badge badge-yellow">Beta</span></td><td>Open-source LetsMesh replacement; mralders0n + @ded; v1.0.0 Jun 2026</td></tr>
+<tr><td>waev</td><td><a href="https://waev.app/#/connect">waev.app</a></td><td><span class="badge badge-yellow">Dev</span></td><td>Real-time telemetry and analytics</td></tr>
+<tr><td>CoreScope</td><td><a href="https://github.com/Kpa-clawbot/CoreScope">GitHub</a></td><td><span class="badge badge-yellow">Dev</span></td><td>GPL-3.0 Docker packet analyzer; self-hostable now</td></tr>
+<tr><td>Global MeshCore Map</td><td><a href="https://map.meshcore.io">map.meshcore.io</a></td><td><span class="badge badge-green">Active</span></td><td>Worldwide node map from MeshCore team</td></tr>
+<tr><td>AREDN</td><td>—</td><td><span class="badge badge-blue">Discussed</span></td><td>Amateur Radio Emergency Data Network; potential Part 97 IP backhaul alongside MeshCore Part 15 nodes; not yet integrated in Austin</td></tr>
+</table>
+</div>
+</section>
+
+<!-- GOVERNANCE -->
+<section id="governance">
+<h2>Governance &amp; Trademark Drama</h2>
+<p>Background on a conflict between the open-source MeshCore firmware community and an external figure (AndyK / ripplebiz) who attempted to assert brand ownership over MeshCore.</p>
+
+<div class="callout callout-success">
+<strong>Current state (Jun 2026):</strong> The MeshCore GitHub repository (meshcore-dev/MeshCore, MIT license) remains under core developer control — Liam (NZ) and Scott retained repo ownership. AndyK rebranded to "Ripple/MeshOS" and is largely absent from community channels. Open-source client tooling has improved: meshcore-open (Flutter) and MeshMapper Flutter app are both now open-source. Austin Mesh is not directly affected by the trademark issue, which is UK-jurisdiction only.
+</div>
+
+<h3>Key Figures</h3>
+<div class="table-wrap">
+<table>
+<tr><th>Person</th><th>Role</th><th>Position</th></tr>
+<tr><td>AndyK / ripplebiz</td><td>YouTuber; Ripple/MeshOS T-Deck firmware author</td><td>Registered "MeshCore" trademark in the UK, Apr 2026; rebranded May 2026</td></tr>
+<tr><td>Liam (NZ)</td><td>Primary firmware maintainer; meshcore.nz app</td><td>Core dev; retained GitHub repo ownership</td></tr>
+<tr><td>Scott</td><td>Core firmware developer</td><td>Core dev; retained GitHub repo ownership</td></tr>
+<tr><td>Lothar</td><td>Community cavity filter supplier</td><td>Exited MeshCore community Apr 2026 due to drama — practical supply chain impact</td></tr>
+</table>
+</div>
+
+<h3>Timeline</h3>
+<ul class="timeline">
+  <li><span class="date">Sep–Oct 2025</span>Friction over Ripple firmware paywall (~$8 "Ultra" unlock for repeater management features) and proprietary mobile app</li>
+  <li><span class="date">Jan 2026</span>Community tracks <a href="https://github.com/zjs81/meshcore-open">meshcore-open</a> (open-source Flutter companion app)</li>
+  <li><span class="date">Feb 2026</span>MeshMapper open-sources their Flutter app</li>
+  <li><span class="date">Apr 23, 2026</span>AndyK registers "MeshCore" trademark in the UK; core devs retain GitHub repo; Lothar exits cavity filter supply</li>
+  <li><span class="date">May 7, 2026</span>ripplebiz rebrands Discord away from "MeshCore" name</li>
+  <li><span class="date">May 14, 2026</span>AndyK releases video; community response minimal</li>
+</ul>
+
+<h3>Impact on Austin Mesh</h3>
+<ul>
+  <li><strong>Cavity filter supply:</strong> Lothar's exit is a real supply-chain gap for Heltec and E22-based builds; community sourcing alternatives</li>
+  <li><strong><code>denyf *</code> firmware command:</strong> Allows repeater operators to block wardriving channels at firmware level; could affect MeshMapper RF survey data collection if adopted locally (not a concern in Austin yet)</li>
+  <li><strong>Trademark:</strong> UK jurisdiction only; no impact on US Part 15 operation or the open-source firmware repository</li>
+  <li><strong>Positive outcome:</strong> Open-source client momentum accelerated — meshcore-open and MeshMapper Flutter app are community wins</li>
+</ul>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+<h2>Resources &amp; Links</h2>
+<div class="two-col">
+  <div>
+    <h4>Getting Started</h4>
+    <ul>
+      <li><a href="https://austinmesh.org/join/getting-started-meshcore/">AustinMesh — Getting Started with MeshCore</a></li>
+      <li><a href="https://austinmesh.org/about/meshcore-vs-meshtastic/">MeshCore vs. Meshtastic comparison</a></li>
+      <li><a href="https://austinmesh.org/join/property-owner-faq-hosting-a-node/">Property Owner FAQ (hosting a node)</a></li>
+      <li><a href="https://austinmesh.org/devices/">Hardware Guide (Austin Mesh)</a></li>
+      <li><a href="https://austinmesh.org/projects/">Community Projects</a></li>
+      <li><a href="https://flasher.meshcore.io/">Web Flasher (in-browser firmware flash)</a></li>
+      <li><a href="https://config.meshcore.dev/">Web Configurator</a></li>
+      <li><a href="https://app.meshcore.nz/">Companion Web App (PWA)</a></li>
+    </ul>
+  </div>
+  <div>
+    <h4>Technical / Developer</h4>
+    <ul>
+      <li><a href="https://github.com/meshcore-dev/MeshCore">MeshCore Firmware (MIT license)</a></li>
+      <li><a href="https://github.com/meshcore-dev/MeshCore/blob/main/docs/faq.md">Firmware FAQ</a></li>
+      <li><a href="https://github.com/meshcore-dev/MeshCore/wiki/Repeater-&-Room-Server-CLI-Reference">Repeater &amp; Room Server CLI Reference</a></li>
+      <li><a href="https://nashme.sh/getting-started/mesh">Nash Mesh Tuning Guide</a></li>
+      <li><a href="https://wiki.meshmapper.net">MeshMapper Wiki</a></li>
+      <li><a href="https://github.com/MeshMapper/MeshMapper_Flutter_App">MeshMapper App (open-source Flutter)</a></li>
+      <li><a href="https://github.com/agessaman/meshcore-packet-capture">MQTT Observer setup (Python)</a></li>
+      <li><a href="https://github.com/zjs81/meshcore-open">meshcore-open (open-source companion)</a></li>
+    </ul>
+  </div>
+</div>
+
+<h3>RF Reference</h3>
+<ul>
+  <li><a href="https://github.com/mikecarper/meshfirmware/blob/main/MeshCoreAdvantages.md">MeshCore advantages vs. Meshtastic (technical comparison)</a></li>
+  <li>FCC Part 15 Subpart C (§15.247) — spread-spectrum device rules for 902–928 MHz</li>
+  <li>ITU-R P.526 — propagation by diffraction (knife-edge model)</li>
+</ul>
+
+<h3>Community</h3>
+<p>Austin Mesh Discord: <a href="https://discord.gg/6a5Sv2s9bG">discord.gg/6a5Sv2s9bG</a> — primary activity in #meshcore. Email: info@austinmesh.org.</p>
+
+<hr class="section-rule">
+<p style="font-size:12px;color:var(--muted);text-align:center">
+  Austin Mesh Community Wiki · Maintained by <strong>tgh0831</strong> (MeshMapper AUS + CT admin) ·
+  Sources: Austin Mesh #meshcore Discord (18,251 msgs Sep 2025–Jun 2026), austinmesh.org, wiki.meshmapper.net, letsmesh.net, MeshCore GitHub ·
+  Licensed <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC-BY-SA-4.0</a> · Last updated 2026-06-15
+</p>
+</section>
+
+</div><!-- #main -->
+</div><!-- #layout -->
+
+<script>
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav a');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => obs.observe(s));
+</script>
+</body>
+</html>
