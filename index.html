@@ -189,8 +189,17 @@
 
     <!-- MAP CONTROLS -->
     <div id="pane-controls" class="sb-pane active">
-      <div class="section-label">Clutter</div>
+      <div class="section-label">Terrain &amp; Clutter</div>
       <div class="ctrl-row">
+        <input type="checkbox" id="chk-hillshade" onchange="updateHillshade()">
+        <label for="chk-hillshade">Hillshade (Esri 3DEP)</label>
+      </div>
+      <div class="ctrl-row" style="gap:10px;padding-top:4px">
+        <label for="hs-opacity" style="color:var(--muted);font-size:11px;white-space:nowrap">Opacity</label>
+        <input type="range" id="hs-opacity" min="10" max="80" value="35" step="5"
+               style="flex:1;accent-color:var(--accent)" onchange="updateHillshade()" oninput="updateHillshade()">
+      </div>
+      <div class="ctrl-row" style="margin-top:4px">
         <input type="checkbox" id="chk-nlcd" onchange="updateNLCD()">
         <label for="chk-nlcd">NLCD land cover (2021)</label>
       </div>
@@ -302,6 +311,27 @@ const map = L.map('map', {zoomControl:true}).setView([30.25, -97.75], 10);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
   attribution:'© OpenStreetMap © CARTO', maxZoom:19
 }).addTo(map);
+
+// ── Hillshade layer (Esri World Hillshade) ────────────────────────────────
+let hillshadeLayer = null;
+
+function updateHillshade() {
+  const on      = document.getElementById('chk-hillshade').checked;
+  const opacity = parseInt(document.getElementById('hs-opacity').value) / 100;
+  if (!on) {
+    if (hillshadeLayer) { map.removeLayer(hillshadeLayer); hillshadeLayer = null; }
+    return;
+  }
+  if (!hillshadeLayer) {
+    hillshadeLayer = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}',
+      { opacity, attribution: 'Esri, USGS 3DEP', maxZoom: 16 }
+    );
+    hillshadeLayer.addTo(map);
+  } else {
+    hillshadeLayer.setOpacity(opacity);
+  }
+}
 
 // ── NLCD WMS layer ────────────────────────────────────────────────────────
 let nlcdLayer = null;
